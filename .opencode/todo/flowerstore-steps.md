@@ -25,16 +25,17 @@ Build a Laravel + Vue.js single-page app for a flower store with product CRUD an
   - id, product_id (FK→products), user_id (FK→users), price (decimal 10,2), timestamps
 
 ### 1.2 Models
-- [ ] **User** — update fillable: first_name, last_name, email_address, mobile_number, address, status
-- [ ] **Product** — create with fillable: product_name, product_description, quantity, price, status
-- [ ] **Order** — create with fillable: product_id, user_id, price
-  - Relationships: `belongsTo(Product)`, `belongsTo(User)`
+- [x] **User** — update fillable: first_name, last_name, email_address, mobile_number, address, status
+  - Removed auth traits (Notifiable, Auth password/hidden/casts)
+  - Added `orders()` hasMany relation
+- [x] **Product** — created with fillable, price/quantity casts, `orders()` hasMany
+- [x] **Order** — created with fillable, price cast, `belongsTo(Product)` + `belongsTo(User)`
 
 ### 1.3 Seeders
-- [ ] **User seeder** — 5–10 dummy users
-- [ ] **Product seeder** — 10–15 dummy flower products
-- [ ] **Order seeder** — 15–20 dummy orders referencing products & users
-- [ ] **DatabaseSeeder** — call all seeders
+- [x] **UserSeeder** — 10 dummy users via updated UserFactory
+- [x] **ProductSeeder** — 15 flower products (Rose, Tulip, Lily, etc.)
+- [x] **OrderSeeder** — 20 dummy orders linking random users & products
+- [x] **DatabaseSeeder** — calls UserSeeder → ProductSeeder → OrderSeeder
 
 ---
 
