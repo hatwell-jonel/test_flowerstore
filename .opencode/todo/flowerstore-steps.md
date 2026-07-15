@@ -42,19 +42,19 @@ Build a Laravel + Vue.js single-page app for a flower store with product CRUD an
 ## Phase 2 — Backend API
 
 ### 2.1 API Routes (`routes/api.php`)
-- [ ] `GET    /api/products`       — list all products (with optional `?include_disabled=1`)
-- [ ] `POST   /api/products`       — create product
-- [ ] `PUT    /api/products/{id}`  — update product
-- [ ] `PATCH  /api/products/{id}/toggle-status` — toggle enabled/disabled
-- [ ] `GET    /api/orders`         — list orders with product name, user info
+- [x] `GET    /api/products`       — `ProductController@index`
+- [x] `POST   /api/products`       — `ProductController@store`
+- [x] `PUT    /api/products/{product}` — `ProductController@update`
+- [x] `PATCH  /api/products/{product}/toggle-status` — `ProductController@toggleStatus`
+- [x] `GET    /api/orders`         — `OrderController@index`
+- [x] Registered in `bootstrap/app.php` with `api:` entry
 
 ### 2.2 Controllers
-- [ ] **ProductController** — index, store, update, toggleStatus
-- [ ] **OrderController** — index (with eager-loaded product name)
+- [x] **ProductController** — index (with `include_disabled` query), store, update, toggleStatus
+- [x] **OrderController** — index (eager-loads product name)
 
 ### 2.3 Form Requests / Validation
-- [ ] `StoreProductRequest` — product_name required|string|max:255, product_description required|string, quantity required|integer|min:0, price required|numeric|min:0
-- [ ] `UpdateProductRequest` — same as store but all optional
+- [x] Skipped — inline validation inside controllers instead (simpler for this project)
 
 ---
 
