@@ -1,58 +1,58 @@
 <template>
     <div>
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold text-gray-800">All Products</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-display font-semibold text-rose-900">All Products</h1>
             <button
                 @click="openAddModal"
-                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-medium"
+                class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 text-sm font-medium"
             >
                 Add Product
             </button>
         </div>
 
-        <div class="bg-white rounded shadow overflow-x-auto">
+        <div class="bg-white rounded-lg shadow-md ring-1 ring-rose-100 overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                <thead class="bg-rose-50 text-rose-700 uppercase text-xs">
                     <tr>
-                        <th class="text-left px-4 py-3">Product Name</th>
-                        <th class="text-left px-4 py-3">Description</th>
-                        <th class="text-left px-4 py-3">Price</th>
-                        <th class="text-left px-4 py-3">Status</th>
-                        <th class="text-left px-4 py-3">Actions</th>
+                        <th class="text-left px-4 py-3 font-semibold">Product Name</th>
+                        <th class="text-left px-4 py-3 font-semibold">Description</th>
+                        <th class="text-left px-4 py-3 font-semibold">Price</th>
+                        <th class="text-left px-4 py-3 font-semibold">Status</th>
+                        <th class="text-left px-4 py-3 font-semibold">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="product in products" :key="product.id" class="border-t hover:bg-gray-50">
-                        <td class="px-4 py-3 font-medium">{{ product.product_name }}</td>
-                        <td class="px-4 py-3 text-gray-600">{{ product.product_description }}</td>
-                        <td class="px-4 py-3">${{ parseFloat(product.price).toFixed(2) }}</td>
+                    <tr v-for="product in products" :key="product.id" class="border-t border-rose-100 hover:bg-amber-50">
+                        <td class="px-4 py-3 font-medium text-gray-800">{{ product.product_name }}</td>
+                        <td class="px-4 py-3 text-gray-500">{{ product.product_description }}</td>
+                        <td class="px-4 py-3 text-gray-700">${{ parseFloat(product.price).toFixed(2) }}</td>
                         <td class="px-4 py-3">
                             <span
                                 :class="product.status === 'enabled'
-                                    ? 'bg-green-100 text-green-700'
-                                    : 'bg-red-100 text-red-700'"
+                                    ? 'bg-emerald-100 text-emerald-700'
+                                    : 'bg-rose-100 text-rose-700'"
                                 class="px-2 py-1 rounded text-xs font-medium"
                             >
                                 {{ product.status }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 space-x-2">
+                        <td class="px-4 py-3 space-x-3">
                             <button
                                 @click="openEditModal(product)"
-                                class="text-blue-600 hover:text-blue-800 text-xs font-medium"
+                                class="text-rose-600 hover:text-rose-800 text-xs font-medium"
                             >
                                 Edit
                             </button>
                             <button
                                 @click="toggleStatus(product)"
-                                class="text-orange-600 hover:text-orange-800 text-xs font-medium"
+                                class="text-amber-600 hover:text-amber-800 text-xs font-medium"
                             >
                                 {{ product.status === 'enabled' ? 'Disable' : 'Enable' }}
                             </button>
                         </td>
                     </tr>
                     <tr v-if="products.length === 0">
-                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="5" class="px-4 py-8 text-center text-gray-400">
                             No products found.
                         </td>
                     </tr>
@@ -61,67 +61,69 @@
         </div>
 
         <div v-if="showModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div class="bg-white rounded shadow-lg w-full max-w-md mx-4 p-6">
-                <h2 class="text-lg font-bold mb-4">{{ editingProduct ? 'Edit Product' : 'Add Product' }}</h2>
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 border-t-4 border-t-rose-500">
+                <div class="p-6">
+                    <h2 class="text-lg font-display font-semibold text-rose-900 mb-4">{{ editingProduct ? 'Edit Product' : 'Add Product' }}</h2>
 
-                <form @submit.prevent="submitForm">
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                            <input
-                                v-model="form.product_name"
-                                type="text"
-                                required
-                                class="w-full border rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                    <form @submit.prevent="submitForm">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                                <input
+                                    v-model="form.product_name"
+                                    type="text"
+                                    required
+                                    class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea
+                                    v-model="form.product_description"
+                                    required
+                                    class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
+                                ></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                <input
+                                    v-model="form.quantity"
+                                    type="number"
+                                    min="0"
+                                    required
+                                    class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                                <input
+                                    v-model="form.price"
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    required
+                                    class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                            <textarea
-                                v-model="form.product_description"
-                                required
-                                class="w-full border rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            ></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                            <input
-                                v-model="form.quantity"
-                                type="number"
-                                min="0"
-                                required
-                                class="w-full border rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                            <input
-                                v-model="form.price"
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                required
-                                class="w-full border rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                    </div>
 
-                    <div class="flex justify-end space-x-2 mt-6">
-                        <button
-                            type="button"
-                            @click="closeModal"
-                            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-medium"
-                        >
-                            {{ editingProduct ? 'Update' : 'Save' }}
-                        </button>
-                    </div>
-                </form>
+                        <div class="flex justify-end space-x-2 mt-6">
+                            <button
+                                type="button"
+                                @click="closeModal"
+                                class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 text-sm font-medium"
+                            >
+                                {{ editingProduct ? 'Update' : 'Save' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
