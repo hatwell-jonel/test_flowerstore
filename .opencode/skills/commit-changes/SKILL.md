@@ -1,6 +1,6 @@
 ---
 name: commit-changes
-description: Stage changes and commit with a conventional commit message, running lint before committing
+description: Stage changes and commit with a conventional commit message
 ---
 
 ## 1. Purpose
