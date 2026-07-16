@@ -48,6 +48,11 @@ Browser (Vue SPA) ──HTTP/JSON──▶ Laravel API ──Eloquent──▶ M
 | /products | Product CRUD | Add/edit products, enable/disable, search, sort, pagination |
 | /orders | Order listing | View orders with page total + grand total, search, sort, pagination |
 
+## Screenshots
+
+![Flower Store UI](screenshots/ui.png)
+*Products and Orders management interface*
+
 ## How to Run the App
 
 ### Prerequisites
