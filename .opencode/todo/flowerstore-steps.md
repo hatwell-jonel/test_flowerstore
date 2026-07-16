@@ -61,26 +61,25 @@ Build a Laravel + Vue.js single-page app for a flower store with product CRUD an
 ## Phase 3 — Frontend (Vue 3 SPA)
 
 ### 3.1 Setup
-- [ ] Install Vue 3 + Vue Router via npm
-- [ ] Create `resources/js/app.js` — mount Vue app
-- [ ] Create `resources/js/router/index.js` — routes for Products and Orders
-- [ ] Create `resources/js/App.vue` — root component with navigation (tab bar)
-- [ ] Create `resources/js/components/Products.vue` — product list + CRUD modal
-- [ ] Create `resources/js/components/Orders.vue` — order list with summary
+- [x] Installed vue@3, vue-router@4, @vitejs/plugin-vue
+- [x] Updated `vite.config.js` with Vue plugin
+- [x] Created `resources/js/app.js` — Vue mount entrypoint
+- [x] Created `resources/js/router/index.js` — /products and /orders routes
+- [x] Created `resources/js/App.vue` — tab navigation + router-view
+- [x] Created `resources/js/components/Products.vue` — CRUD table + modal
+- [x] Created `resources/js/components/Orders.vue` — order table + summary
 
 ### 3.2 Products Page
-- [ ] Data table: Product Name | Description | Price | Status | Actions
-- [ ] "Add Product" button → modal/form
-- [ ] "Edit" button → same modal pre-filled
-- [ ] Toggle (Enable/Disable) button per row
-- [ ] Validation feedback
+- [x] Data table: Product Name | Description | Price | Status | Actions
+- [x] Add / Edit modal form with validation (required fields, min values)
+- [x] Enable/Disable toggle per row
 
 ### 3.3 Orders Page
-- [ ] Data table: Order ID | Product Name | Price
-- [ ] Summary footer: total orders count, total price sum
+- [x] Data table: Order ID | Product Name | Price
+- [x] Summary footer: total orders count + total price sum
 
 ### 3.4 Views
-- [ ] `resources/views/welcome.blade.php` — update to serve the SPA (mount div + Vite directives)
+- [x] `resources/views/welcome.blade.php` — minimal SPA shell with `<div id="app">`
 
 ---
 
