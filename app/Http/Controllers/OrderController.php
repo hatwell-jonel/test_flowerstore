@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {
@@ -24,7 +25,7 @@ class OrderController extends Controller
         }
 
         $orders = $query->paginate(7);
-        $grandTotal = Order::sum('price');
+        $grandTotal = Cache::remember('orders_grand_total', 3600, fn () => Order::sum('price'));
 
         return response()->json(array_merge($orders->toArray(), [
             'grand_total' => (float) $grandTotal,
