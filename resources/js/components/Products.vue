@@ -58,6 +58,27 @@
                     </tr>
                 </tbody>
             </table>
+            <div v-if="pagination.last_page > 1" class="flex items-center justify-between px-4 py-3 border-t border-rose-100 text-sm">
+                <span class="text-gray-500">
+                    Page {{ pagination.current_page }} of {{ pagination.last_page }}
+                </span>
+                <div class="flex space-x-2">
+                    <button
+                        :disabled="pagination.current_page <= 1"
+                        @click="fetchProducts(pagination.current_page - 1)"
+                        class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        :disabled="pagination.current_page >= pagination.last_page"
+                        @click="fetchProducts(pagination.current_page + 1)"
+                        class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div v-if="showModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -136,6 +157,7 @@ export default {
     data() {
         return {
             products: [],
+            pagination: { current_page: 1, last_page: 1 },
             showModal: false,
             editingProduct: null,
             form: {
@@ -147,13 +169,14 @@ export default {
         };
     },
     mounted() {
-        this.fetchProducts();
+        this.fetchProducts(1);
     },
     methods: {
-        async fetchProducts() {
+        async fetchProducts(page = 1) {
             try {
-                const res = await axios.get('/api/v1/products?include_disabled=1');
-                this.products = res.data;
+                const res = await axios.get(`/api/v1/products?include_disabled=1&page=${page}`);
+                this.products = res.data.data;
+                this.pagination = { current_page: res.data.current_page, last_page: res.data.last_page };
             } catch (e) {
                 console.error('Failed to fetch products', e);
             }
@@ -185,7 +208,7 @@ export default {
                     await axios.post('/api/v1/products', this.form);
                 }
                 this.closeModal();
-                await this.fetchProducts();
+                await this.fetchProducts(this.pagination.current_page);
             } catch (e) {
                 console.error('Failed to save product', e);
             }
@@ -193,7 +216,7 @@ export default {
         async toggleStatus(product) {
             try {
                 await axios.patch(`/api/v1/products/${product.id}/toggle-status`);
-                await this.fetchProducts();
+                await this.fetchProducts(this.pagination.current_page);
             } catch (e) {
                 console.error('Failed to toggle status', e);
             }

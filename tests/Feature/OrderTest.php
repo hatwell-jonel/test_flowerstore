@@ -21,7 +21,7 @@ class OrderTest extends TestCase
         $response = $this->getJson('/api/v1/orders');
 
         $response->assertOk()
-            ->assertJsonCount(1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonFragment(['price' => '25.00']);
     }
 

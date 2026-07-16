@@ -19,7 +19,7 @@ class ProductTest extends TestCase
         $response = $this->getJson('/api/v1/products');
 
         $response->assertOk()
-            ->assertJsonCount(1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonFragment(['product_name' => 'Enabled Product'])
             ->assertJsonMissing(['product_name' => 'Disabled Product']);
     }
@@ -32,7 +32,7 @@ class ProductTest extends TestCase
         $response = $this->getJson('/api/v1/products?include_disabled=true');
 
         $response->assertOk()
-            ->assertJsonCount(2);
+            ->assertJsonCount(2, 'data');
     }
 
     public function test_can_create_product()

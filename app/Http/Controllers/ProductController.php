@@ -15,7 +15,7 @@ class ProductController extends Controller
             $query->where('status', 'enabled');
         }
 
-        return response()->json($query->get());
+        return response()->json($query->paginate(7));
     }
 
     public function store(Request $request)

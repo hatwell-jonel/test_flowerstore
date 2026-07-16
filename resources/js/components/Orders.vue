@@ -23,14 +23,40 @@
                         </td>
                     </tr>
                 </tbody>
-                <tfoot v-if="orders.length > 0" class="bg-rose-50 font-semibold">
-                    <tr class="border-t-2 border-rose-200">
-                        <td class="px-4 py-3 text-rose-800 text-sm" colspan="1">Total Orders: {{ orders.length }}</td>
+                <tfoot v-if="orders.length > 0" class="bg-rose-50">
+                    <tr class="border-t-2 border-rose-200 font-semibold">
+                        <td class="px-4 py-3 text-rose-800 text-sm">Orders on this page: {{ orders.length }}</td>
                         <td class="px-4 py-3"></td>
-                        <td class="px-4 py-3 text-rose-800">${{ totalPrice.toFixed(2) }}</td>
+                        <td class="px-4 py-3 text-rose-800">Page Total: ${{ pageTotal.toFixed(2) }}</td>
+                    </tr>
+                    <tr class="border-t border-rose-100 font-semibold">
+                        <td class="px-4 py-3 text-rose-800 text-sm">All orders: {{ pagination.total }}</td>
+                        <td class="px-4 py-3"></td>
+                        <td class="px-4 py-3 text-rose-800">Grand Total: ${{ grandTotal.toFixed(2) }}</td>
                     </tr>
                 </tfoot>
             </table>
+            <div v-if="pagination.last_page > 1" class="flex items-center justify-between px-4 py-3 border-t border-rose-100 text-sm">
+                <span class="text-gray-500">
+                    Page {{ pagination.current_page }} of {{ pagination.last_page }}
+                </span>
+                <div class="flex space-x-2">
+                    <button
+                        :disabled="pagination.current_page <= 1"
+                        @click="fetchOrders(pagination.current_page - 1)"
+                        class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        :disabled="pagination.current_page >= pagination.last_page"
+                        @click="fetchOrders(pagination.current_page + 1)"
+                        class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -42,21 +68,25 @@ export default {
     data() {
         return {
             orders: [],
+            pagination: { current_page: 1, last_page: 1, total: 0 },
+            grandTotal: 0,
         };
     },
     computed: {
-        totalPrice() {
+        pageTotal() {
             return this.orders.reduce((sum, o) => sum + parseFloat(o.price), 0);
         },
     },
     mounted() {
-        this.fetchOrders();
+        this.fetchOrders(1);
     },
     methods: {
-        async fetchOrders() {
+        async fetchOrders(page = 1) {
             try {
-                const res = await axios.get('/api/v1/orders');
-                this.orders = res.data;
+                const res = await axios.get(`/api/v1/orders?page=${page}`);
+                this.orders = res.data.data;
+                this.pagination = { current_page: res.data.current_page, last_page: res.data.last_page, total: res.data.total };
+                this.grandTotal = res.data.grand_total;
             } catch (e) {
                 console.error('Failed to fetch orders', e);
             }
