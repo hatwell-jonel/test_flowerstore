@@ -18,6 +18,15 @@ export default defineConfig({
             },
         }),
         tailwindcss(),
+        {
+            name: 'custom-url',
+            configureServer(server) {
+                server.printUrls = () => {
+                    console.log('');
+                    console.log('  \x1b[1mLocal:\x1b[0m   http://localhost:8000');
+                };
+            },
+        },
     ],
     server: {
         watch: {
