@@ -1,6 +1,15 @@
 <template>
-    <div>
-        <h1 class="text-2xl font-display font-semibold text-rose-900 mb-6">Orders</h1>
+        <div>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-display font-semibold text-rose-900">Orders</h1>
+            <input
+                v-model="search"
+                @input="fetchOrders(1)"
+                type="text"
+                placeholder="Search by product name..."
+                class="border border-gray-300 rounded px-3 py-2 text-sm w-48 focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
+            />
+        </div>
 
         <div class="bg-white rounded-lg shadow-md ring-1 ring-rose-100 overflow-x-auto">
             <table class="w-full text-sm">
@@ -78,6 +87,7 @@ export default {
             grandTotal: 0,
             sort: 'product_name',
             direction: 'asc',
+            search: '',
         };
     },
     computed: {
@@ -100,7 +110,8 @@ export default {
         },
         async fetchOrders(page = 1) {
             try {
-                const res = await axios.get(`/api/v1/orders?page=${page}&sort=${this.sort}&direction=${this.direction}`);
+                const params = `page=${page}&sort=${this.sort}&direction=${this.direction}&search=${encodeURIComponent(this.search)}`;
+                const res = await axios.get(`/api/v1/orders?${params}`);
                 this.orders = res.data.data;
                 this.pagination = { current_page: res.data.current_page, last_page: res.data.last_page, total: res.data.total };
                 this.grandTotal = res.data.grand_total;

@@ -36,4 +36,19 @@ class OrderTest extends TestCase
         $response->assertOk()
             ->assertJsonFragment(['product_name' => 'Lily']);
     }
+
+    public function test_can_search_orders_by_product_name()
+    {
+        $user = User::factory()->create();
+        $rose = Product::factory()->create(['product_name' => 'Red Rose']);
+        $lily = Product::factory()->create(['product_name' => 'White Lily']);
+        Order::create(['product_id' => $rose->id, 'user_id' => $user->id, 'price' => 10.00]);
+        Order::create(['product_id' => $lily->id, 'user_id' => $user->id, 'price' => 15.00]);
+
+        $response = $this->getJson('/api/v1/orders?search=Lily');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonFragment(['product_name' => 'White Lily']);
+    }
 }

@@ -2,12 +2,21 @@
     <div>
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-display font-semibold text-rose-900">All Products</h1>
-            <button
-                @click="openAddModal"
-                class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 text-sm font-medium"
-            >
-                Add Product
-            </button>
+            <div class="flex items-center space-x-3">
+                <input
+                    v-model="search"
+                    @input="fetchProducts(1)"
+                    type="text"
+                    placeholder="Search products..."
+                    class="border border-gray-300 rounded px-3 py-2 text-sm w-48 focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
+                />
+                <button
+                    @click="openAddModal"
+                    class="bg-rose-600 text-white px-4 py-2 rounded hover:bg-rose-700 text-sm font-medium"
+                >
+                    Add Product
+                </button>
+            </div>
         </div>
 
         <div class="bg-white rounded-lg shadow-md ring-1 ring-rose-100 overflow-x-auto">
@@ -169,6 +178,7 @@ export default {
             pagination: { current_page: 1, last_page: 1 },
             sort: 'product_name',
             direction: 'asc',
+            search: '',
             showModal: false,
             editingProduct: null,
             form: {
@@ -194,7 +204,8 @@ export default {
         },
         async fetchProducts(page = 1) {
             try {
-                const res = await axios.get(`/api/v1/products?include_disabled=1&page=${page}&sort=${this.sort}&direction=${this.direction}`);
+                const params = `include_disabled=1&page=${page}&sort=${this.sort}&direction=${this.direction}&search=${encodeURIComponent(this.search)}`;
+                const res = await axios.get(`/api/v1/products?${params}`);
                 this.products = res.data.data;
                 this.pagination = { current_page: res.data.current_page, last_page: res.data.last_page };
             } catch (e) {

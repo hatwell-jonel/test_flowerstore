@@ -15,6 +15,14 @@ class ProductController extends Controller
             $query->where('status', 'enabled');
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%")
+                  ->orWhere('product_description', 'like', "%{$search}%");
+            });
+        }
+
         if (in_array($request->sort, ['product_name', 'price', 'status'])) {
             $direction = $request->direction === 'desc' ? 'desc' : 'asc';
             $query->orderBy($request->sort, $direction);

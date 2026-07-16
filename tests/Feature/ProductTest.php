@@ -112,6 +112,30 @@ class ProductTest extends TestCase
             ->assertJsonFragment(['status' => 'enabled']);
     }
 
+    public function test_can_search_products_by_name()
+    {
+        Product::factory()->create(['product_name' => 'Red Rose']);
+        Product::factory()->create(['product_name' => 'White Lily']);
+
+        $response = $this->getJson('/api/v1/products?search=Rose&include_disabled=1');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonFragment(['product_name' => 'Red Rose'])
+            ->assertJsonMissing(['product_name' => 'White Lily']);
+    }
+
+    public function test_can_search_products_by_description()
+    {
+        Product::factory()->create(['product_name' => 'Something', 'product_description' => 'beautiful flower']);
+        Product::factory()->create(['product_name' => 'Other', 'product_description' => 'something else']);
+
+        $response = $this->getJson('/api/v1/products?search=beautiful&include_disabled=1');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
     public function test_returns_404_for_nonexistent_product()
     {
         $response = $this->putJson('/api/v1/products/999', ['product_name' => 'Ghost']);

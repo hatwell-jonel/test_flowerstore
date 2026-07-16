@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
         $query = Order::with('product:id,product_name,price');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('product', function ($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%");
+            });
+        }
 
         if (in_array($request->sort, ['product_name', 'price'])) {
             $direction = $request->direction === 'desc' ? 'desc' : 'asc';
@@ -25,7 +31,7 @@ class OrderController extends Controller
         }
 
         $orders = $query->paginate(7);
-        $grandTotal = Cache::remember('orders_grand_total', 3600, fn () => Order::sum('price'));
+        $grandTotal = Order::sum('price');
 
         return response()->json(array_merge($orders->toArray(), [
             'grand_total' => (float) $grandTotal,
