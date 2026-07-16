@@ -15,6 +15,11 @@ class ProductController extends Controller
             $query->where('status', 'enabled');
         }
 
+        if (in_array($request->sort, ['product_name', 'price', 'status'])) {
+            $direction = $request->direction === 'desc' ? 'desc' : 'asc';
+            $query->orderBy($request->sort, $direction);
+        }
+
         return response()->json($query->paginate(7));
     }
 

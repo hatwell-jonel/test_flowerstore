@@ -7,8 +7,14 @@
                 <thead class="bg-rose-50 text-rose-700 uppercase text-xs">
                     <tr>
                         <th class="text-left px-4 py-3 font-semibold">Order ID</th>
-                        <th class="text-left px-4 py-3 font-semibold">Product Name</th>
-                        <th class="text-left px-4 py-3 font-semibold">Price</th>
+                        <th @click="sortBy('product_name')" class="text-left px-4 py-3 font-semibold cursor-pointer select-none hover:text-rose-900">
+                            Product Name
+                            <span class="text-xs ml-1">{{ sort === 'product_name' ? (direction === 'asc' ? '▲' : '▼') : '↕' }}</span>
+                        </th>
+                        <th @click="sortBy('price')" class="text-left px-4 py-3 font-semibold cursor-pointer select-none hover:text-rose-900">
+                            Price
+                            <span class="text-xs ml-1">{{ sort === 'price' ? (direction === 'asc' ? '▲' : '▼') : '↕' }}</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,6 +76,8 @@ export default {
             orders: [],
             pagination: { current_page: 1, last_page: 1, total: 0 },
             grandTotal: 0,
+            sort: 'product_name',
+            direction: 'asc',
         };
     },
     computed: {
@@ -81,9 +89,18 @@ export default {
         this.fetchOrders(1);
     },
     methods: {
+        sortBy(column) {
+            if (this.sort === column) {
+                this.direction = this.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sort = column;
+                this.direction = 'asc';
+            }
+            this.fetchOrders(1);
+        },
         async fetchOrders(page = 1) {
             try {
-                const res = await axios.get(`/api/v1/orders?page=${page}`);
+                const res = await axios.get(`/api/v1/orders?page=${page}&sort=${this.sort}&direction=${this.direction}`);
                 this.orders = res.data.data;
                 this.pagination = { current_page: res.data.current_page, last_page: res.data.last_page, total: res.data.total };
                 this.grandTotal = res.data.grand_total;
