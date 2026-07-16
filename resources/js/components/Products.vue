@@ -7,6 +7,7 @@
                     v-model="search"
                     @input="fetchProducts(1)"
                     type="text"
+                    maxlength="100"
                     placeholder="Search products..."
                     class="border border-gray-300 rounded px-3 py-2 text-sm w-48 focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
                 />
@@ -114,6 +115,7 @@
                                     required
                                     class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
                                 />
+                                <p v-if="errors.product_name" class="text-xs text-rose-500 mt-1">{{ errors.product_name[0] }}</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -122,16 +124,18 @@
                                     required
                                     class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
                                 ></textarea>
+                                <p v-if="errors.product_description" class="text-xs text-rose-500 mt-1">{{ errors.product_description[0] }}</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
                                 <input
                                     v-model="form.quantity"
                                     type="number"
-                                    min="0"
+                                    min="1"
                                     required
                                     class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
                                 />
+                                <p v-if="errors.quantity" class="text-xs text-rose-500 mt-1">{{ errors.quantity[0] }}</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Price</label>
@@ -139,10 +143,11 @@
                                     v-model="form.price"
                                     type="number"
                                     step="0.01"
-                                    min="0"
+                                    min="1"
                                     required
                                     class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
                                 />
+                                <p v-if="errors.price" class="text-xs text-rose-500 mt-1">{{ errors.price[0] }}</p>
                             </div>
                         </div>
 
@@ -181,6 +186,7 @@ export default {
             search: '',
             showModal: false,
             editingProduct: null,
+            errors: {},
             form: {
                 product_name: '',
                 product_description: '',
@@ -214,7 +220,8 @@ export default {
         },
         openAddModal() {
             this.editingProduct = null;
-            this.form = { product_name: '', product_description: '', quantity: 0, price: 0 };
+            this.form = { product_name: '', product_description: '', quantity: 1, price: 1 };
+            this.errors = {};
             this.showModal = true;
         },
         openEditModal(product) {
@@ -225,11 +232,13 @@ export default {
                 quantity: product.quantity,
                 price: product.price,
             };
+            this.errors = {};
             this.showModal = true;
         },
         closeModal() {
             this.showModal = false;
             this.editingProduct = null;
+            this.errors = {};
         },
         async submitForm() {
             try {
@@ -241,7 +250,11 @@ export default {
                 this.closeModal();
                 await this.fetchProducts(this.pagination.current_page);
             } catch (e) {
-                console.error('Failed to save product', e);
+                if (e.response?.status === 422) {
+                    this.errors = e.response.data.errors;
+                } else {
+                    console.error('Failed to save product', e);
+                }
             }
         },
         async toggleStatus(product) {

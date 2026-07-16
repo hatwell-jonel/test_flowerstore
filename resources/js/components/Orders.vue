@@ -6,6 +6,7 @@
                 v-model="search"
                 @input="fetchOrders(1)"
                 type="text"
+                maxlength="100"
                 placeholder="Search by product name..."
                 class="border border-gray-300 rounded px-3 py-2 text-sm w-48 focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
             />

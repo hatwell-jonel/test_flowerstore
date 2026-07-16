@@ -35,9 +35,9 @@ class ProductController extends Controller
     {
         $data = $request->validate([
             'product_name' => 'required|string|max:255',
-            'product_description' => 'required|string',
-            'quantity' => 'required|integer|min:0',
-            'price' => 'required|numeric|min:0',
+            'product_description' => 'required|string|max:5000',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:1',
         ]);
 
         $data['status'] = 'enabled';
@@ -53,9 +53,9 @@ class ProductController extends Controller
 
         $data = $request->validate([
             'product_name' => 'sometimes|string|max:255',
-            'product_description' => 'sometimes|string',
-            'quantity' => 'sometimes|integer|min:0',
-            'price' => 'sometimes|numeric|min:0',
+            'product_description' => 'sometimes|string|max:5000',
+            'quantity' => 'sometimes|integer|min:1',
+            'price' => 'sometimes|numeric|min:1',
         ]);
 
         $product->update($data);
